@@ -8,7 +8,7 @@
             <button @click="rotateShape">rotate</button>
             <button @click="moveShapeLeft">&lt;</button>
             <button @click="moveShapeRight">&gt;</button> -->
-            <span>cycle: {{ cycle }}</span>
+            <!-- <span>cycle: {{ cycle }}</span> -->
         </div>
         <div class="game-container">
             <div class="grid-container" v-if="grid">
@@ -228,6 +228,7 @@ export default {
 .game-container {
     display: flex;
     justify-content: center;
+    padding: 20pt;
 }
 .preview-grid-container {
     margin-left: 10pt;
