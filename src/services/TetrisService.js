@@ -1,6 +1,11 @@
 /* eslint-disable no-unused-vars */
 import TETRIMINOS from "./tetriminos";
 
+const DEFAULT_CELL = {
+	color: "#eaeaea",
+	type: "empty",
+};
+
 const TetrisService = {
 	generateGrid: (width, height, defaultCell) => {
 		const grid = [];
@@ -20,7 +25,7 @@ const TetrisService = {
 
 		let xPosition = position;
 
-		console.log({ xMax, xToShift });
+		// console.log({ xMax, xToShift });
 
 		if (xToShift) {
 			xPosition = TetrisService.shiftShapePosition(
@@ -54,9 +59,22 @@ const TetrisService = {
 		const x_max_eval = x_max <= grid[0].length;
 		const y_max_eval = y_max <= grid.length;
 
-		let noCollisions = true;
+		let noCollisions = !TetrisService.checkShapeCollision(
+			grid,
+			shape,
+			position,
+			direction
+		);
 
-		console.clear();
+		if (noCollisions && x_min_eval && x_max_eval && y_max_eval) {
+			// console.log("shift is possible");
+			return { x: position.x + direction.x, y: position.y + direction.y };
+		} else {
+			return null;
+		}
+	},
+	checkShapeCollision(grid, shape, position, direction) {
+		let collision = false;
 
 		for (let jndex = 0; jndex < shape.grid.length; jndex++) {
 			for (let index = 0; index < shape.grid[0].length; index++) {
@@ -68,28 +86,14 @@ const TetrisService = {
 				if (shape.grid[jndex][index] && pos.y < grid.length) {
 					const type = grid[pos.y][pos.x].type;
 					if (type != "empty") {
-						noCollisions = false;
+						collision = true;
 					}
-					console.log(JSON.stringify({ pos, type }));
+					// console.log(JSON.stringify({ pos, type }));
 				}
 			}
 		}
 
-		if (!noCollisions) {
-			console.log("collided");
-		}
-
-		// console.log(collisions);
-
-		// console.log({ x_min, x_max, y_max });
-		// console.log({ x_min_eval, x_max_eval, y_max_eval });
-
-		if (noCollisions && x_min_eval && x_max_eval && y_max_eval) {
-			// console.log("shift is possible");
-			return { x: position.x + direction.x, y: position.y + direction.y };
-		} else {
-			return null;
-		}
+		return collision;
 	},
 	placeShape(matrix, shape, position) {
 		//create a deep copy of grid array objects
@@ -106,7 +110,7 @@ const TetrisService = {
 			}
 		}
 
-		return grid;
+		return TetrisService.evaluateGrid(grid, shape, position);
 	},
 	renderShape: (matrix, shape, position) => {
 		//create a deep copy of grid array objects
@@ -123,6 +127,42 @@ const TetrisService = {
 		}
 
 		return grid;
+	},
+	evaluateGrid: (matrix) => {
+		//create a deep copy of grid array objects
+		const grid = JSON.parse(JSON.stringify(matrix));
+
+		let completeRows = [];
+
+		for (let jndex = 0; jndex < grid.length; jndex++) {
+			let isCompleteRow = true;
+
+			for (let index = 0; index < grid[0].length; index++) {
+				if (grid[jndex][index].type === "empty") {
+					// console.log(grid[jndex][index]);
+					isCompleteRow = false;
+					break;
+				}
+			}
+
+			if (isCompleteRow) {
+				completeRows.push(jndex);
+			}
+		}
+
+		completeRows.forEach((rowIndex) => {
+			const row = grid[0].map(() => {
+				return DEFAULT_CELL;
+			});
+
+			grid.splice(rowIndex, 1);
+
+			grid.unshift(row);
+		});
+
+		const score = Math.round(completeRows.length * 1.4);
+
+		return { grid, score };
 	},
 	tetriminos: TETRIMINOS,
 };

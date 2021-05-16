@@ -16,7 +16,7 @@ export default {
     --cell-size: 10pt;
     width: var(--cell-size);
     height: var(--cell-size);
-    border: 1px solid black;
+    border: 0.2pt solid #6b6b6b57;
     box-sizing: border-box;
     font-size: 6pt;
 }

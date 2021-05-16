@@ -1,20 +1,27 @@
 <template>
     <div id="app">
         <div class="actions-container">
-            <button @click="togglePlay">
+            <!-- <button @click="togglePlay">
                 {{ running ? "pause" : "start" }}
             </button>
             <button @click="updateCycle">update</button>
             <button @click="rotateShape">rotate</button>
             <button @click="moveShapeLeft">&lt;</button>
-            <button @click="moveShapeRight">&gt;</button>
-            <span>x: {{ position.x }} | y: {{ position.y }}</span>
+            <button @click="moveShapeRight">&gt;</button> -->
+            <span>cycle: {{ cycle }}</span>
         </div>
-        <div class="grid-container" v-if="grid">
-            <Grid :grid="paintedGrid" />
-        </div>
-        <div class="preview-grid-container" v-if="previewGrid">
-            <Grid :grid="paintedPreviewGrid" />
+        <div class="game-container">
+            <div class="grid-container" v-if="grid">
+                <Grid :grid="paintedGrid" />
+            </div>
+            <div class="preview-grid-container" v-if="previewGrid">
+                <Grid :grid="paintedPreviewGrid" />
+                <button @click="togglePlay">
+                    {{ running ? "pause" : "start" }}
+                </button>
+                <div>cycle: {{ cycle }}</div>
+                <div>score: {{ score }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -25,7 +32,7 @@ import Grid from "./components/Grid.vue";
 import TetrisService from "./services/TetrisService";
 
 const DEFAULT_CELL = {
-    color: "lightgray",
+    color: "#eaeaea",
     type: "empty",
 };
 
@@ -36,8 +43,8 @@ export default {
     },
     data() {
         return {
-            height: 30,
-            width: 20,
+            height: 24,
+            width: 14,
 
             grid: null,
             previewGrid: null,
@@ -46,6 +53,8 @@ export default {
             nextShape: null,
 
             position: { x: 0, y: 0 },
+            cycle: 0,
+            score: 0,
 
             ticker: null,
             tickerSpeed: 800,
@@ -89,16 +98,22 @@ export default {
             if (position) {
                 this.position = position;
             } else {
-                this.grid = TetrisService.placeShape(
+                const result = TetrisService.placeShape(
                     this.grid,
                     this.shape,
                     this.position
                 );
 
+                this.grid = result.grid;
+
+                this.score = this.score + result.score;
+
                 this.position = this.defaultPosition;
                 this.shape = this.nextShape;
                 this.nextShape = this.getRandomShape();
             }
+
+            this.cycle++;
         },
         rotateShape() {
             if (!this.running) return;
@@ -204,5 +219,35 @@ export default {
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+}
+
+.actions-container {
+    margin-bottom: 10pt;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+}
+.preview-grid-container {
+    margin-left: 10pt;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-grid-container .grid {
+    display: inline-block;
+    border: 2pt solid lightgray;
+    margin-bottom: 5pt;
+}
+
+button {
+    border: 1pt #08a0d5 solid;
+    background-color: #05b6f3;
+    border-radius: 1pt;
+    text-transform: uppercase;
+    color: white;
+    font-size: 9pt;
+    padding: 3pt;
 }
 </style>

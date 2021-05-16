@@ -3,7 +3,7 @@ const TETRIMINOS = [
 		name: "O",
 		width: 2,
 		height: 2,
-		color: "red",
+		color: "#ef641a",
 		grid: [
 			[1, 1],
 			[1, 1],
@@ -13,14 +13,14 @@ const TETRIMINOS = [
 		name: "I",
 		width: 4,
 		height: 1,
-		color: "blue",
+		color: "#1791f1",
 		grid: [[1, 1, 1, 1]],
 	},
 	{
 		name: "T",
 		width: 3,
 		height: 2,
-		color: "green",
+		color: "#12bf12",
 		grid: [
 			[1, 1, 1],
 			[0, 1, 0],
@@ -30,7 +30,7 @@ const TETRIMINOS = [
 		name: "L",
 		width: 2,
 		height: 3,
-		color: "purple",
+		color: "#b706b7",
 		grid: [
 			[1, 0],
 			[1, 0],
@@ -41,7 +41,7 @@ const TETRIMINOS = [
 		name: "J",
 		width: 2,
 		height: 3,
-		color: "yellow",
+		color: "#ffda00",
 		grid: [
 			[0, 1],
 			[0, 1],
@@ -52,7 +52,7 @@ const TETRIMINOS = [
 		name: "S",
 		width: 3,
 		height: 2,
-		color: "brown",
+		color: "#d01818",
 		grid: [
 			[0, 1, 1],
 			[1, 1, 0],
