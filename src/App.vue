@@ -13,6 +13,9 @@
         <div class="grid-container" v-if="grid">
             <Grid :grid="paintedGrid" />
         </div>
+        <div class="preview-grid-container" v-if="previewGrid">
+            <Grid :grid="paintedPreviewGrid" />
+        </div>
     </div>
 </template>
 
@@ -61,6 +64,12 @@ export default {
                 this.shape,
                 this.position
             );
+        },
+        paintedPreviewGrid() {
+            return TetrisService.renderShape(this.previewGrid, this.nextShape, {
+                x: 0,
+                y: 0,
+            });
         },
     },
     methods: {
@@ -142,6 +151,8 @@ export default {
                 this.height,
                 DEFAULT_CELL
             );
+
+            this.previewGrid = TetrisService.generateGrid(4, 3, DEFAULT_CELL);
         },
         initGame() {
             this.shape = this.getRandomShape();
